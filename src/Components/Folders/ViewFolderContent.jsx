@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFolder, faSearch, faTrash, faX } from '@fortawesome/free-solid-svg-icons';
 
 export default function ViewFolderContent() {
   const { folderName } = useParams();
@@ -11,6 +13,7 @@ export default function ViewFolderContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteImages, setDeleteImages] = useState(false);
   const [imagesToDelete, setImagesToDelete] = useState([]);
+  const token = localStorage.getItem('token')
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,9 +25,7 @@ export default function ViewFolderContent() {
     try {
       const response = await fetch('http://localhost/api/retrieveFiles', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json','Accept':'application/json', 'Authorization':`Bearer ${token}` },
         body: JSON.stringify({ folder_name: folderName }),
       });
 
@@ -69,9 +70,7 @@ export default function ViewFolderContent() {
     try {
       const response = await fetch('http://localhost/api/deleteFiles', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json','Accept':'application/json', 'Authorization':`Bearer ${token}` },
         body: JSON.stringify({
           folder_name: folderName,
           files: imagesToDelete,
@@ -97,17 +96,22 @@ export default function ViewFolderContent() {
   };
 
   const handleRedButton = () => {
-    if (deleteImages && imagesToDelete.length > 0) {
-      deleteFiles();
+    if (deleteImages) {
+      if (imagesToDelete.length > 0) {
+        deleteFiles();
+      } else {
+        setDeleteImages(false);
+      }
     } else {
       setDeleteImages(true);
     }
   };
+  
 
   const handleBlueButton = () => {
     if (deleteImages) {
       setDeleteImages(false);
-      setImagesToDelete([]); // Clear selection when canceling
+      setImagesToDelete([]); 
     }
   };
 
@@ -126,6 +130,7 @@ export default function ViewFolderContent() {
   return (
     <div className="content-main">
       <div className="search-bar">
+      <FontAwesomeIcon className="search-icon" icon={faSearch} />
         <input 
           type="text" 
           placeholder="Meklēt failus..." 
@@ -136,7 +141,7 @@ export default function ViewFolderContent() {
           {deleteImages ? "Apstiprināt dzēšanu" : "Dzēst attēlus"}
         </button>
         <button className='search-buttons' onClick={handleBlueButton}>
-          {deleteImages ? "Atcelt dzēšanu" : "Pievienot attēlus ekrānam"}
+          {deleteImages ? "Atcelt dzēšanu" : "Pievienot attēlus mapei"}
         </button>
       </div>
     
@@ -153,12 +158,12 @@ export default function ViewFolderContent() {
           ))}
         </div>
       ) : (
-        <div className='search-error'>Šī mape ir tukša</div>
+        <div className='search-error'>{searchTerm ? "Nevar atrast failu ar tādu nosaukumu" : "Šī mape ir tukša"}</div>
       )}
 
       {selectedImage && !deleteImages && (
         <div className='modal' onClick={handleCloseModal}>
-          <img src={selectedImage} alt="Full size" className='modal-image' />
+          <img src={`http://localhost${selectedImage}`}   alt="Full size" className='modal-image' />
         </div>
       )}
     </div>

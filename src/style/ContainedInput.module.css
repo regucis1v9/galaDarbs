@@ -1,0 +1,14 @@
+.input {
+  width: 280px;
+  height: 3.375rem; /* 54px converted to rem */
+  padding-top: 1.125rem; /* 18px converted to rem */
+}
+
+.label {
+  position: absolute;
+  pointer-events: none;
+  font-size: var(--mantine-font-size-xs);
+  padding-left: var(--mantine-spacing-sm);
+  padding-top: calc(var(--mantine-spacing-sm) / 2);
+  z-index: 1;
+}

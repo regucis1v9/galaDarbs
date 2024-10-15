@@ -1,0 +1,26 @@
+.wrapper {
+  position: relative;
+  margin-bottom: 30px; /* Converted: 1.875rem */
+  width: 100%;
+}
+
+.dropzone {
+  border-width: 1px; /* Converted: 0.0625rem */
+  border: dashed 1px gray;
+  padding-bottom: 50px; /* Converted: 3.125rem */
+  border-radius: 5px;
+  background-color: #2e2e2e24;
+}
+
+.icon {
+  color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
+}
+.textWidth{
+    width: 100%;
+}
+.control {
+  position: absolute;
+  width: 250px; /* Converted: 15.625rem */
+  left: calc(50% - 125px); /* Converted: calc(50% - 7.8125rem) */
+  bottom: -20px; /* Converted: -1.25rem */
+}

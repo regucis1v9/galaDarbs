@@ -1,0 +1,72 @@
+import { useRef } from 'react';
+import { Text, Group, Button, rem, useMantineTheme } from '@mantine/core';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconCloudUpload, IconX, IconDownload } from '@tabler/icons-react';
+import classes from '../../style/DropzoneButton.module.css';
+
+export default function DropzoneArea({ files, setFiles }) {
+  const theme = useMantineTheme();
+  const openRef = useRef(null);
+
+  // Handle the drop event
+  const handleDrop = (newFiles) => {
+    setFiles((prevFiles) => {
+      const updatedFiles = [...prevFiles, ...newFiles];
+      const imagePreviews = updatedFiles.map(file =>
+        file.type.startsWith('image/') ? URL.createObjectURL(file) : null
+      ).filter(preview => preview !== null);
+
+      // Revoke previous object URLs to free up memory
+      updatedFiles.forEach(preview => URL.revokeObjectURL(preview));
+      return updatedFiles;
+    });
+  };
+
+  return (
+    <div className={classes.wrapper}>
+      <Dropzone
+        openRef={openRef}
+        onDrop={handleDrop} // Use handleDrop for file handling
+        className={classes.dropzone}
+        radius="md"
+        accept={IMAGE_MIME_TYPE}
+        maxSize={2 * 1024 ** 2} // Limit size to 2MB
+      >
+        <div style={{ pointerEvents: 'none' }}>
+          <Group justify="center">
+            <Dropzone.Accept>
+              <IconDownload
+                style={{ width: rem(50), height: rem(50) }}
+                color={theme.colors.blue[6]}
+                stroke={1.5}
+              />
+            </Dropzone.Accept>
+            <Dropzone.Reject>
+              <IconX
+                style={{ width: rem(50), height: rem(50) }}
+                color={theme.colors.red[6]}
+                stroke={1.5}
+              />
+            </Dropzone.Reject>
+            <Dropzone.Idle>
+              <IconCloudUpload style={{ width: '50px', height: '50px' }} stroke={1.5} />
+            </Dropzone.Idle>
+          </Group>
+
+          <Text ta="center" fw={700} fz="lg" mt="xl" className={classes.textWidth}>
+            <Dropzone.Accept>Ievelc failus šeit</Dropzone.Accept>
+            <Dropzone.Reject>Failiem jāūt ne vairāk par 2MB</Dropzone.Reject>
+            <Dropzone.Idle>Augšupielādē failus</Dropzone.Idle>
+          </Text>
+          <Text ta="center" fz="sm" mt="xs" c="dimmed" className={classes.textWidth}>
+            Ievelc failus lai augšupielādētu tos. Sistēma atļauj tikai <i>.png, .jpg, .jpeg, .svg</i> failus, kas ir mazāki par 2MB.
+          </Text>
+        </div>
+      </Dropzone>
+
+      <Button className={classes.control} size="md" radius="xl" onClick={() => openRef.current?.()}>
+        Izvēlēties failus
+      </Button>
+    </div>
+  );
+}

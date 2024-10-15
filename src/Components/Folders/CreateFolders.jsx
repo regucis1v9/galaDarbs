@@ -6,6 +6,7 @@ export default function CreateFolders() {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState('');
   const dispatch = useDispatch();
+  const token = localStorage.getItem('token')
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -30,10 +31,10 @@ export default function CreateFolders() {
     try {
       const response = await fetch('http://localhost/api/createFolder', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ folder_name: inputValue }),
+        headers: { 'Content-Type': 'application/json','Accept':'application/json', 'Authorization':`Bearer ${token}` },
+        body: JSON.stringify({ 
+          folder_name: inputValue 
+        }),
       });
 
       if (!response.ok) {

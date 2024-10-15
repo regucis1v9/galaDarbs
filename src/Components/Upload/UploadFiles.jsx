@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';
+import { Select } from '@mantine/core';
+import UploadButton from '../Mantine/UploadButton';
+import DropzoneArea from '../Mantine/Dropzone';
+import dropdown from '../../style/ContainedInput.module.css';
+
 export default function UploadFiles() {
-  const [dragging, setDragging] = useState(false);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState('');
-  const [files, setFiles] = useState([]); 
-  const [previews, setPreviews] = useState([]); 
-  const [selectedImage, setSelectedImage] = useState(null); 
+  const [files, setFiles] = useState([]); // State to hold uploaded files
+  const [previews, setPreviews] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchFolders = async () => {
       try {
-        const response = await fetch('http://localhost/api/listFolders');
+        const response = await fetch('http://localhost/api/listFolders', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -26,56 +34,14 @@ export default function UploadFiles() {
     };
 
     fetchFolders();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     dispatch(updateActiveComponent('upload'));
-  }, []);
+  }, [dispatch]);
 
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = (event) => {
-    event.preventDefault();
-    setDragging(false);
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    setDragging(false);
-    const droppedFiles = Array.from(event.dataTransfer.files);
-    handleFiles(droppedFiles);
-  };
-
-  const handleFiles = (newFiles) => {
-    setFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles, ...newFiles];
-      const imagePreviews = updatedFiles.map(file => 
-        file.type.startsWith('image/') ? URL.createObjectURL(file) : null
-      ).filter(preview => preview !== null);
-
-      previews.forEach(preview => URL.revokeObjectURL(preview));
-      setPreviews(imagePreviews);
-
-      console.log('Files array:', updatedFiles); 
-      return updatedFiles;
-    });
-  };
-
-  const handleClick = () => {
-    document.getElementById('fileInput').click();
-  };
-
-  const handleFileSelect = (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    handleFiles(selectedFiles);
-  };
-
-  const handleFolderChange = (event) => {
-    setSelectedFolder(event.target.value);
+  const handleFolderChange = (value) => {
+    setSelectedFolder(value);
   };
 
   const handleImageClick = (preview) => {
@@ -95,13 +61,17 @@ export default function UploadFiles() {
     const formData = new FormData();
     formData.append('folder_name', selectedFolder);
 
-    files.forEach((file, index) => {
-      formData.append(`files[]`, file);
+    files.forEach((file) => {
+      const trimmedFileName = file.name.replace(/\s+/g, '_');
+      const trimmedFile = new File([file], trimmedFileName, { type: file.type });
+      formData.append(`files[]`, trimmedFile);
     });
+
     try {
       const response = await fetch('http://localhost/api/uploadFiles', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: { 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) {
         throw new Error('File upload failed');
@@ -109,13 +79,12 @@ export default function UploadFiles() {
 
       const data = await response.json();
       console.log('Upload successful:', data);
-      alert('Faili veiksmīgi auģsupielādēti');
-      
-      setFiles([]);
-      setPreviews([]);
+      alert('Faili veiksmīgi augšupielādēti');
+
+      setFiles([]); // Clear files after upload
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Neizdevās auģsupielādēt failus');
+      alert('Neizdevās augšupielādēt failus');
     }
   };
 
@@ -123,50 +92,30 @@ export default function UploadFiles() {
     <div className='width100'>
       {!selectedFolder ? (
         <div className='folder-selector-wrapper'>
-          <label htmlFor="folderSelect">Izvēlies mapi, lai turpinātu</label>
-          <select
+          <Select
+            label="Izvēlies mapi, lai turpinātu"
             id="folderSelect"
             value={selectedFolder}
             onChange={handleFolderChange}
-            className='dropdown-selector'
-          >
-            <option disabled hidden value="">Mape nav izvēlēta</option>
-            {folders.map((folder) => (
-              <option key={folder} value={folder}>
-                {folder}
-              </option>
-            ))}
-          </select>
+            data={folders.map(folder => ({ value: folder, label: folder }))}
+            placeholder="Mape nav izvēlēta"
+            classNames={dropdown}
+          />
         </div>
       ) : (
         <div>
-          <div
-            className={`dropzone ${dragging ? 'dragging' : ''}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={handleClick}
-          >
-            <p>Ievelc failus vai uzklikšķini, lai augšupielādētu failus "{selectedFolder}" mapē.</p>
-            <input
-              type="file"
-              id="fileInput"
-              style={{ display: 'none' }}
-              onChange={handleFileSelect}
-              multiple
-            />
-          </div>
+          <DropzoneArea files={files} setFiles={setFiles} /> {/* Pass files and setFiles */}
           <div className="submit-wrapper">
-            <button className='submit-button' onClick={handleFileUpload}>Augšupielādēt</button>
+            <UploadButton onUpload={handleFileUpload} />
           </div>
           <div className='image-previews'>
-            {previews.map((preview, index) => (
-              <img 
-                key={index} 
-                src={preview} 
-                alt={`Preview ${index}`} 
-                className='preview-image' 
-                onClick={() => handleImageClick(preview)}
+            {files.map((file, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(file)} // Create preview URL for each file
+                alt={`Preview ${index}`}
+                className='preview-image'
+                onClick={() => handleImageClick(URL.createObjectURL(file))}
               />
             ))}
           </div>

@@ -1,11 +1,11 @@
-import Sidebar from "../Components/Global/Sidebar";
+
 import ViewFiles from "../Components/Folders/ViewAllFolders";
+import Layout from "../layout";
 export default function View() {
   return (
-    <main >
-      <Sidebar />
-      <ViewFiles/>
-    </main>
+    <Layout>
+    <ViewFiles/>
+  </Layout>
   );
 }
 

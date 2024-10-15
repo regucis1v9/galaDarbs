@@ -1,11 +1,11 @@
-import Sidebar from "../Components/Global/Sidebar";
+
 import UploadFiles from "../Components/Upload/UploadFiles";
+import Layout from "../layout";
 export default function Upload() {
   return (
-    <main >
-      <Sidebar />
+    <Layout>
       <UploadFiles/>
-    </main>
+    </Layout>
   );
 }
 

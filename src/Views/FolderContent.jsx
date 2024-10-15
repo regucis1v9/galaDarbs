@@ -1,13 +1,13 @@
-import Sidebar from "../Components/Global/Sidebar";
+
 import ViewFolderContent from "../Components/Folders/ViewFolderContent";
+import Layout from "../layout";
 
 export default function FolderContent() {
 
   return (
-    <main >
-      <Sidebar />
+    <Layout>
       <ViewFolderContent/>
-    </main>
+    </Layout>
   );
 }
 

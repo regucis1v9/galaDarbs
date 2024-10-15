@@ -1,11 +1,11 @@
-import Sidebar from "../Components/Global/Sidebar";
-import ManageScreens from "../Components/Screens/ManageScreen";
+
+import ManageScreens from "../Components/ScreenManagement/ManageScreen";
+import Layout from "../layout";
 export default function ScreenManager() {
   return (
-    <main >
-      <Sidebar />
-      <ManageScreens/>
-    </main>
+    <Layout>
+    <ManageScreens/>
+  </Layout>
   );
 }
 
