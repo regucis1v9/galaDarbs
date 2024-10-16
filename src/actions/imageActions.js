@@ -1,12 +1,14 @@
-export const ADD_IMAGES = 'ADD_IMAGES';
-export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+// Action types
+export const SET_BUTTONS_DATA = 'SET_BUTTONS_DATA';
+export const UPDATE_IMAGE_LINK = 'UPDATE_IMAGE_LINK';
 
-export const addImages = (imageLink) => ({
-  type: ADD_IMAGES,
-  payload: imageLink,
+// Action creators
+export const setButtonsData = (buttonsData) => ({
+  type: SET_BUTTONS_DATA,
+  payload: buttonsData,
 });
 
-export const removeImage = (imageLink) => ({
-  type: REMOVE_IMAGE,
-  payload: imageLink,
+export const updateImageLink = (id, imageLink) => ({
+  type: UPDATE_IMAGE_LINK,
+  payload: { id, imageLink },
 });

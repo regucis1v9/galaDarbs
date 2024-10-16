@@ -1,0 +1,9 @@
+.root{
+    border: solid 1px rgba(41, 41, 41, 0.146);
+    background-color: rgba(173, 173, 173, 0.146);
+    transition: all 0.1s ease-in-out;
+    color:transparent;
+}
+.root:hover{
+    background-color: rgba(173, 173, 173, 0.346);
+}

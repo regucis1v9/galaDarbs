@@ -797,10 +797,20 @@ p{
     display: flex;
     height:100%;
     width: 100%;
-    background: #000;
-    color:white;
     align-items: center;
     justify-content: center;
     min-width: 300px;
   }
+}
+.aspect16-9{
+    aspect-ratio: 16/9;
+    button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.slide-preview-image{
+    height:101%;
+    width: auto;
 }

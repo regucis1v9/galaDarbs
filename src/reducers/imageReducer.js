@@ -1,24 +1,22 @@
-import { ADD_IMAGES, REMOVE_IMAGE } from '../actions/imageActions';
+import { SET_BUTTONS_DATA, UPDATE_IMAGE_LINK } from '../actions/imageActions';
 
-const initialState = {
-  imageLink:'',
-};
+const initialState = [];
 
-const imageReducer = (state = initialState, action) => {
+const imageLinkReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_IMAGES:
-      return {
-        ...state,
-        imageLink: action.payload,
-      };
-    case REMOVE_IMAGE:
-      return {
-        ...state,
-        images: '',
-      };
+    case SET_BUTTONS_DATA:
+      return action.payload; // Set the initial state with buttons data
+
+    case UPDATE_IMAGE_LINK:
+      return state.map((button) =>
+        button.id === action.payload.id
+          ? { ...button, imageLink: action.payload.imageLink }
+          : button
+      );
+
     default:
       return state;
   }
 };
 
-export default imageReducer;
+export default imageLinkReducer;

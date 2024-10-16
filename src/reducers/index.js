@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import activeComponentReducer from './componentReducer';
-import imageReducer from './imageReducer';
+import imageLinkReducer from './imageReducer';
 
 const rootReducer = combineReducers({
   activeComponent: activeComponentReducer,
-  images: imageReducer,
+  imageLinks: imageLinkReducer,
 });
 
 export default rootReducer;
