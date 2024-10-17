@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { updateImageLink } from '../../actions/imageActions';
-import { Skeleton } from "@mantine/core";
+import { Skeleton, Button } from "@mantine/core";
 
 export default function ViewFoldersModal({ selectedButtonId, closeModal }) {
   const dispatch = useDispatch();
@@ -65,7 +65,6 @@ export default function ViewFoldersModal({ selectedButtonId, closeModal }) {
 
   const handleImageClick = (imageLink) => {
     dispatch(updateImageLink(selectedButtonId, imageLink));
-    console.log(`Image clicked: ${imageLink}`);
     closeModal();
   };
 
@@ -75,19 +74,10 @@ export default function ViewFoldersModal({ selectedButtonId, closeModal }) {
 
   return (
     <div className="manage-main">
-      <div className="search-bar">
-        <FontAwesomeIcon className="search-icon" icon={faSearch} />
-        <input 
-          type="text" 
-          placeholder="Meklēt mapes..." 
-          value={searchTerm} 
-          onChange={(e) => setSearchTerm(e.target.value)} 
-        />
-      </div>
       {selectedFolder ? (
         <div>
-          <button onClick={() => setSelectedFolder(null)}>Back to Folders</button>
-          <h2>{selectedFolder}</h2>
+          <Button ml={20} onClick={() => setSelectedFolder(null)}>Atpakaļ</Button>
+          <h2 className="folder-modal-title">{selectedFolder}</h2>
           {isLoadingFiles ? (
             <div className="folder-main">
               <Skeleton w={100} h={100}></Skeleton>
@@ -115,6 +105,16 @@ export default function ViewFoldersModal({ selectedButtonId, closeModal }) {
           )}
         </div>
       ) : (
+        <>
+        <div className="search-bar">
+          <FontAwesomeIcon className="search-icon" icon={faSearch} />
+          <input 
+            type="text" 
+            placeholder="Meklēt mapes..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+        </div>
         <div className="folder-main">
           {isLoadingFolders ? (
             <>
@@ -138,11 +138,10 @@ export default function ViewFoldersModal({ selectedButtonId, closeModal }) {
                 <div className="folder-title">{folder}</div>
                </div>
               </button>
-              
             ))
           )}
         </div>
-      )}
+      </>)}
     </div>
   );
 }

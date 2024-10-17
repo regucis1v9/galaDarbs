@@ -104,7 +104,7 @@ export default function UploadFiles() {
         </div>
       ) : (
         <div>
-          <DropzoneArea files={files} setFiles={setFiles} /> {/* Pass files and setFiles */}
+          <DropzoneArea files={files} setFiles={setFiles} /> 
           <div className="submit-wrapper">
             <UploadButton onUpload={handleFileUpload} />
           </div>
@@ -112,7 +112,7 @@ export default function UploadFiles() {
             {files.map((file, index) => (
               <img
                 key={index}
-                src={URL.createObjectURL(file)} // Create preview URL for each file
+                src={URL.createObjectURL(file)}
                 alt={`Preview ${index}`}
                 className='preview-image'
                 onClick={() => handleImageClick(URL.createObjectURL(file))}

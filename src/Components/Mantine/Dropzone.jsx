@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Text, Group, Button, rem, useMantineTheme } from '@mantine/core';
-import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { IconCloudUpload, IconX, IconDownload } from '@tabler/icons-react';
 import classes from '../../style/DropzoneButton.module.css';
 
@@ -26,11 +26,24 @@ export default function DropzoneArea({ files, setFiles }) {
     <div className={classes.wrapper}>
       <Dropzone
         openRef={openRef}
-        onDrop={handleDrop} // Use handleDrop for file handling
+        onDrop={handleDrop}
         className={classes.dropzone}
         radius="md"
-        accept={IMAGE_MIME_TYPE}
-        maxSize={2 * 1024 ** 2} // Limit size to 2MB
+        accept={[
+          MIME_TYPES.png,
+          MIME_TYPES.jpeg,
+          MIME_TYPES.svg,
+          MIME_TYPES.gif,
+          MIME_TYPES.gif,
+          MIME_TYPES.webp,
+          MIME_TYPES.avif,
+          MIME_TYPES.heic,
+          MIME_TYPES.heif,
+          MIME_TYPES.gif,
+          MIME_TYPES.mp4,
+        ]}
+        maxSize={50000000}
+        maxFiles={100} 
       >
         <div style={{ pointerEvents: 'none' }}>
           <Group justify="center">

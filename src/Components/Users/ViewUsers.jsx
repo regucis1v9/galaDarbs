@@ -15,6 +15,7 @@ export default function ViewUsers() {
     const token = localStorage.getItem('token');
     const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] = useDisclosure(false);
     const [editModalOpened, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const form = useForm({
         initialValues: {
@@ -64,7 +65,6 @@ export default function ViewUsers() {
     const handleDelete = async () => {
         if (!userToDelete) return;
 
-        // Optimistically remove the user from the list
         const newUsersList = allUsers.filter(user => user.id !== userToDelete.id);
         setAllUsers(newUsersList);
 
@@ -112,12 +112,11 @@ export default function ViewUsers() {
             const data = await response.json();
             setAllUsers(data.users || []); 
             setUserToEdit(null);
-            closeEditModal();
+            handleCloseEditModal();
         } catch (error) {
             console.error('Error editing user:', error);
         }
     };
-    
 
     const filteredUsers = allUsers.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -137,8 +136,25 @@ export default function ViewUsers() {
             confirmPassword: '',
             role: user.role, 
         });
+        form.validate();
         openEditModal();
     };
+
+    const resetFormState = () => {
+        form.reset(); 
+        setIsFormValid(false); 
+    };
+
+    const handleCloseEditModal = () => {
+        resetFormState(); 
+        closeEditModal();
+        setUserToEdit(null); 
+    };
+
+    useEffect(() => {
+        const isValid = Object.values(form.errors).every(error => !error) && Object.values(form.values).every(value => value !== '');
+        setIsFormValid(isValid);
+    }, [form.values, form.errors]);
 
     return (
         <div className="view-user-content">
@@ -174,7 +190,7 @@ export default function ViewUsers() {
                                 <button className="edit-user" onClick={() => handleEditButtonClick(user)}>
                                     <FontAwesomeIcon className="user-action-icon" icon={faPenToSquare} />
                                 </button>
-                                <button className="delete-user" onClick={(e) => handleDeleteButtonClick(user)}>
+                                <button className="delete-user" onClick={() => handleDeleteButtonClick(user)}>
                                     <FontAwesomeIcon className="user-action-icon" icon={faTrash} />
                                 </button>
                             </div>
@@ -192,7 +208,8 @@ export default function ViewUsers() {
                     <Button variant="outline" onClick={closeDeleteModal}>Atcelt</Button>
                 </div>
             </Modal>
-            <Modal opened={editModalOpened} onClose={closeEditModal} title="Rediģēt lietotāju" centered>
+
+            <Modal opened={editModalOpened} onClose={handleCloseEditModal} title="Rediģēt lietotāju" centered>
                 <form onSubmit={form.onSubmit(handleEdit)}>
                     <TextInput
                         label="Vārds"
@@ -217,7 +234,7 @@ export default function ViewUsers() {
                     <Select
                         label="Pieejas līmenis"
                         placeholder="Izvēlēties lomu"
-                        {...form.getInputProps('role')} // Bind role to form
+                        {...form.getInputProps('role')}
                         data={[
                             { value: 'Administrators', label: 'Administrators' },
                             { value: 'Lietotājs', label: 'Lietotājs' },
@@ -225,8 +242,8 @@ export default function ViewUsers() {
                         ]}
                     />
                     <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-                        <Button type="submit">Saglabāt izmaiņas</Button>
-                        <Button variant="outline" onClick={closeEditModal}>Atcelt</Button>
+                        <Button type="submit" disabled={!isFormValid}>Saglabāt izmaiņas</Button>
+                        <Button variant="outline" onClick={handleCloseEditModal}>Atcelt</Button>
                     </div>
                 </form>
             </Modal>

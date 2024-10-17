@@ -1,7 +1,7 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavLink } from '@mantine/core';
-import { IconDeviceTv, IconFolder, IconUpload, IconUser,IconPlayerTrackNext } from '@tabler/icons-react';
+import { IconDeviceTv, IconFolder, IconUpload, IconUser,IconPlayerTrackNext, IconEye, IconPlus } from '@tabler/icons-react';
 import React, { useState, useEffect } from 'react';
 
 export default function Layout({ children }) {
@@ -65,8 +65,8 @@ export default function Layout({ children }) {
           color="blue"
           variant="light"
         >
-          <NavLink href="/dashboard/createUser" label="Izveidot lietotāju" />
-          <NavLink label="Skatīt lietotājus" href="/dashboard/viewAllUsers" />
+          <NavLink href="/dashboard/createUser" label="Izveidot lietotāju" leftSection={<IconPlus size="1rem" stroke={1.5} />} />
+          <NavLink label="Skatīt lietotājus" href="/dashboard/viewAllUsers" leftSection={<IconEye size="1rem" stroke={1.5} />}/>
           
         </NavLink>
         <NavLink
@@ -79,8 +79,8 @@ export default function Layout({ children }) {
           color="blue"
           variant="light"
         >
-          <NavLink href="/dashboard/createSlideshow" label="Izveidot slaidrādi" />
-          <NavLink label="Skatīt Slaidrādes" href="/dashboard/viewAllUsers" />
+          <NavLink href="/dashboard/createSlideshow" label="Izveidot slaidrādi" leftSection={<IconPlus size="1rem" stroke={1.5} />} />
+          <NavLink label="Skatīt Slaidrādes" href="/dashboard/viewAllUsers" leftSection={<IconEye size="1rem" stroke={1.5} />} />
           
         </NavLink>
       </AppShell.Navbar>

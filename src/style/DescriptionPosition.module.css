@@ -1,0 +1,15 @@
+.root{
+    width:50%;
+}
+.stack1{
+    flex:1;
+}
+.stack2{
+    width: max-content;
+}
+.maxContent{
+    width: max-content;
+}
+.border{
+    border: solid black 1px;
+}
