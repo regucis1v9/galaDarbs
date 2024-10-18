@@ -41,7 +41,7 @@ class FolderController extends Controller
     public function uploadFiles(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            'files.*' => 'required|image|max:2048',
+            'files.*' => 'required|image|max:51200',
             'folder_name' => 'required|string|max:255'
         ]);
 
