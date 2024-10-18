@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Skeleton, Modal, Button, TextInput, PasswordInput, Text, Select } from '@mantine/core';
+import { Skeleton, Modal, Button, TextInput, PasswordInput, Text, Select, Input } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import { IconSearch, IconEdit, IconTrashFilled } from '@tabler/icons-react';
+import classes from "../../style/SearchInput.module.css";
 
 export default function ViewUsers() {
     const [allUsers, setAllUsers] = useState([]);
@@ -159,16 +160,8 @@ export default function ViewUsers() {
     return (
         <div className="view-user-content">
             <div className="search-bar">
-                <FontAwesomeIcon className="search-icon" icon={faSearch} />
-                <input
-                    type="text"
-                    placeholder="Meklēt lietotājus..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Link to='/dashboard/createUser'>
-                    <button>Pievienot lietotāju</button>
-                </Link>
+                <Input classNames={{wrapper: classes.maxWidth}} leftSection={<IconSearch size={18}/>} size='md'></Input>
+                <Button  size='md' >Pievienot lietotāju</Button>
             </div>
 
             {loading ? (
@@ -188,10 +181,10 @@ export default function ViewUsers() {
                             </span>
                             <div className="quick-user-actions">
                                 <button className="edit-user" onClick={() => handleEditButtonClick(user)}>
-                                    <FontAwesomeIcon className="user-action-icon" icon={faPenToSquare} />
+                                    <IconEdit></IconEdit>
                                 </button>
                                 <button className="delete-user" onClick={() => handleDeleteButtonClick(user)}>
-                                    <FontAwesomeIcon className="user-action-icon" icon={faTrash} />
+                                    <IconTrashFilled></IconTrashFilled>
                                 </button>
                             </div>
                         </div>
@@ -201,15 +194,31 @@ export default function ViewUsers() {
                 <Text>No results found.</Text>
             )}
 
-            <Modal opened={deleteModalOpened} onClose={closeDeleteModal} title="Apstiprināt dzēšanu" centered>
-                <Text>Vai tiešām vēlaties dzēst lietotāju?</Text>
+            <Modal 
+                opened={deleteModalOpened} 
+                onClose={closeDeleteModal} 
+                title="Apstiprināt dzēšanu" 
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                }}
+                centered>
+                <Text>Vai tiešām vēlaties dzēst lietotāju <strong>{userToDelete?.name}</strong> ?</Text>
                 <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-                    <Button onClick={handleDelete}>Apstiprināt</Button>
-                    <Button variant="outline" onClick={closeDeleteModal}>Atcelt</Button>
+                    <Button onClick={handleDelete} color="red">Apstiprināt</Button>
+                    <Button variant="outline" onClick={closeDeleteModal} color="dark">Atcelt</Button>
                 </div>
             </Modal>
 
-            <Modal opened={editModalOpened} onClose={handleCloseEditModal} title="Rediģēt lietotāju" centered>
+            <Modal 
+            opened={editModalOpened} 
+            onClose={handleCloseEditModal} 
+            title="Rediģēt lietotāju"
+            overlayProps={{
+                backgroundOpacity: 0.55,
+                blur: 3,
+            }} 
+            centered>
                 <form onSubmit={form.onSubmit(handleEdit)}>
                     <TextInput
                         label="Vārds"

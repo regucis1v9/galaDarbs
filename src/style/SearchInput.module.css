@@ -1,0 +1,8 @@
+.maxWidth{
+    flex:1;
+    margin-right: 30px;
+    display: flex;
+}
+.flex{
+    display: flex;
+}

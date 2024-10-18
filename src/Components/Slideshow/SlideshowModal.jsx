@@ -118,13 +118,39 @@ export default function SlideshowModal() {
         return combinedData;
     };
 
+    // Post data to the API and log the response
+    const postDataToApi = async () => {
+        const dataToPost = prepareDataForPost();
+
+        try {
+            const response = await fetch('http://localhost/api/saveSlides', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(dataToPost),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to post data');
+            }
+
+            const responseData = await response.json();
+            console.log('API response:', responseData);
+
+        } catch (error) {
+            console.error('Error posting data:', error);
+        }
+    };
+
     // Determine if the button should be disabled
     const isButtonDisabled = !startDate || !endDate || selectedScreens.length === 0 || !!startDateError;
 
     return (
         <Stack align="stretch" gap="md">
             <MultiSelect
-                maxDropdownHeight={150}
+                maxDropdownHeight={250}
                 required
                 label="Izvēlies ekrānus"
                 placeholder="Izvēlies ekrānu"
@@ -169,7 +195,7 @@ export default function SlideshowModal() {
                     disabled={!startDate}
                 />
             </Group>
-            <Button disabled={isButtonDisabled} onClick={() => prepareDataForPost()}>
+            <Button disabled={isButtonDisabled} onClick={() => postDataToApi()}>
                 Izveidot slaidrādi
             </Button>
         </Stack>

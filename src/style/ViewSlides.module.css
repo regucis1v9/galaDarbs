@@ -1,0 +1,6 @@
+.seperator{
+    padding-top: 10px;
+    margin-top:10px;
+    border-top: solid 2px var(--mantine-color-blue-1);
+    width: 120px;
+}

@@ -7,23 +7,43 @@ import Upload from './Views/UploadFiles';
 import ViewFiles from './Views/ViewFolders';
 import Manage from './Views/ManageScreens';
 import FolderContent from './Views/FolderContent';
-import ScreenManager from './Views/ScreenManager';
 import UserActions from './Views/UserActions';
 import UserCreation from './Views/UserCreation';
 import UserManagment from './Views/UserManagment';
-import ManageSingleUser from './Views/ManageSingleUser';
 import Login from './Components/Auth/Login';
-import Popup from './Components/Mantine/Popup'
-import CreateSlideshow from './Views/CreateSlideshow'
+import CreateSlideshow from './Views/CreateSlideshow';
+import ViewAllSlideshows from './Views/ViewAllSlideshows';
 import { MantineProvider } from '@mantine/core';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import store from './store'; 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
+import Test from "./Views/Test";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const themeOverride = {
+  colors: {
+    blue: ['#f0f0ff', '#d0d0ff', '#b0b0ff', '#9090ff', '#7070ff', '#5050ff', '#282262', '#18143f', '#0000cc', '#000099'],
+  },
+  primaryColor: 'blue', 
+  globalStyles: (theme) => ({
+    '*, *::before, *::after': {
+      boxSizing: 'border-box',
+    },
+    body: {
+      borderColor: theme.colors.blue[6], 
+    },
+    'input, button, select, textarea': {
+      borderColor: theme.colors.blue[6],  
+    },
+    '.mantine-Button-root': {
+      border: `3px solid ${theme.colors.blue[6]}`, 
+    }
+  }),
+};
+
 root.render(
-  <MantineProvider>
+  <MantineProvider theme={themeOverride}>
     <Provider store={store}>
         <Router>
             <Routes>
@@ -33,16 +53,14 @@ root.render(
                 <Route path="/dashboard/view" element={<ViewFiles />} />
                 <Route path="/dashboard/selectScreen" element={<Manage />} />
                 <Route path="/dashboard/folderContent/:folderName" element={<FolderContent />} />
-                <Route path="/dashboard/manageScreen/:screenID" element={<ScreenManager />} />
                 <Route path="/dashboard/users" element={<UserActions />} />
                 <Route path="/dashboard/createUser" element={<UserCreation />} />
                 <Route path="/dashboard/viewAllUsers" element={<UserManagment />} />
-                <Route path="/dashboard/viewUser/:id" element={<ManageSingleUser />} />
-                <Route path="/dashboard/CreateSlideshow/" element={<CreateSlideshow />} />
-                <Route path="/test" element={<Popup />} />
+                <Route path="/dashboard/createSlideshow/" element={<CreateSlideshow />} />
+                <Route path="/dashboard/" element={<ViewAllSlideshows />} />
+                <Route path="/test/" element={<Test />} />
             </Routes>
         </Router>
     </Provider>
   </MantineProvider>
 );
-

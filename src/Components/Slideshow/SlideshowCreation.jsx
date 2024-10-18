@@ -8,7 +8,7 @@ import SlideshowModal from "./SlideshowModal";
 import classes from "../../style/SlidesCreation.module.css";
 import position from "../../style/DescriptionPosition.module.css"
 import description from "../../style/SlideDescription.module.css";
-import { IconX, IconCirclePlusFilled, IconArrowRight, IconPlus } from "@tabler/icons-react";
+import { IconX, IconCirclePlusFilled, IconArrowRight, IconPlus, IconMinus } from "@tabler/icons-react";
 
 export default function SlideshowCreation() {
     const { height: viewportHeight, width: viewportWidth } = useViewportSize();
@@ -34,7 +34,7 @@ export default function SlideshowCreation() {
 
     useEffect(() => {
         if (!Array.isArray(buttonsData) || buttonsData.length === 0) {
-            const initialButton = { id: nextId, imageLink: "", description: "", textColor: 'rgba(255, 255, 255, 1)', bgColor: 'rgba(0, 0, 0, 1)', textPosition: "" };
+            const initialButton = { id: nextId, imageLink: "", description: "", textColor: 'rgba(255, 255, 255, 1)', bgColor: 'rgba(40,34,98,1)', textPosition: "" };
             dispatch(setButtonsData([initialButton]));
             setNextId((prevId) => prevId + 1);
         }
@@ -168,7 +168,7 @@ export default function SlideshowCreation() {
                                             color="gray"
                                             classNames={{ root: classes.root }}
                                             style={{
-                                                border: button.id === selectedButtonId ? "3px solid #228be6" : "none",
+                                                border: button.id === selectedButtonId ? "3px solid #282262" : "none",
                                             }}
                                         >
                                             <img className="slide-preview-image" src={button.imageLink || ""} alt="" />
@@ -179,8 +179,8 @@ export default function SlideshowCreation() {
                                             onClick={() => removeButton(button.id)}
                                             style={{
                                                 position: "absolute",
-                                                top: 5,
-                                                right: 5,
+                                                top: 10,
+                                                right: 10,
                                                 zIndex: 1,
                                                 fontSize: 16,
                                                 width: 24,

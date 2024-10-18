@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MantineInput from "../Mantine/MantineInput";
+import { Button } from "@mantine/core";
 import dropdown from "../../style/ContainedInput.module.css";
 import { Select } from "@mantine/core";
 
@@ -17,40 +18,59 @@ export default function CreateUsers() {
   const [passwordError, setPasswordError] = useState("");
   const [roleError, setRoleError] = useState(""); // New error state for role
 
-  const submitForm = async () => {
-    let isValid = true;
-
-    if (username.trim() === "") {
+  // Real-time validation for username
+  const handleUsernameChange = (e) => {
+    const value = e.target.value;
+    setUsername(value);
+    if (value.trim() === "") {
       setUsernameError("Lietotājvārds ir obligāts");
-      isValid = false;
     } else {
       setUsernameError("");
     }
-    if (email.trim() === "") {
+  };
+
+  // Real-time validation for email
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (value.trim() === "") {
       setEmailError("E-pasts ir obligāts");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/\S+@\S+\.\S+/.test(value)) {
       setEmailError("Neatbilstošs e-pasta formāts");
-      isValid = false;
     } else {
       setEmailError("");
     }
+  };
 
-    if (password.trim() === "") {
+  // Real-time validation for password
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (value.trim() === "") {
       setPasswordError("Parole ir obligāta");
-      isValid = false;
-    } else if (password.length < 8) {
+    } else if (value.length < 8) {
       setPasswordError("Parolei jābūt vismaz 8 rakstzīmēm");
-      isValid = false;
     } else {
       setPasswordError("");
     }
+  };
 
-    if (role.trim() === "") {
+  // Real-time validation for role
+  const handleRoleChange = (value) => {
+    setRole(value);
+    if (value.trim() === "") {
       setRoleError("Lūdzu izvēlieties pieejas līmeni");
-      isValid = false;
     } else {
       setRoleError("");
+    }
+  };
+
+  const submitForm = async () => {
+    let isValid = true;
+
+    // Checking if any field has an error before submission
+    if (usernameError || emailError || passwordError || roleError) {
+      isValid = false;
     }
 
     if (isValid) {
@@ -73,10 +93,6 @@ export default function CreateUsers() {
 
         if (response.ok) {
           console.log(data);
-          setEmailError('');
-          setUsernameError('');
-          setPasswordError('');
-          setRoleError('');
           setCreatedUser(true);
         } else {
           if (data.errors) {
@@ -105,56 +121,47 @@ export default function CreateUsers() {
       <form className="create-container" onSubmit={handleSubmit}>
         <span>
           <MantineInput
-            label="Username"
+            label="Lietotājvārds"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            onChange={handleUsernameChange}
+            placeholder="Lietotājvārds"
+            error={usernameError}
           />
-          <p className={`input-error ${usernameError ? "active-error" : ""}`}>
-            {usernameError}
-          </p>
         </span>
         <span>
           <MantineInput
-            label="Email"
+            label="Epasts"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+            onChange={handleEmailChange}
+            placeholder="Epasts"
+            error={emailError}
           />
-          <p className={`input-error ${emailError ? "active-error" : ""}`}>
-            {emailError}
-          </p>
         </span>
         <span>
           <MantineInput
-            label="Password"
+            label="Parole"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            onChange={handlePasswordChange}
+            placeholder="Parole"
+            error={passwordError}
           />
-          <p className={`input-error ${passwordError ? "active-error" : ""}`}>
-            {passwordError}
-          </p>
         </span>
         <span>
           <Select
+            variant="filled"
             label="Pieejas līmenis"
             id="folderSelect"
             data={['Skatītājs', 'Rediģētājs', 'Administrators']}
             placeholder="Izvēlieties pieejas līmeni"
             value={role}
-            onChange={setRole} 
+            onChange={handleRoleChange}
             classNames={dropdown}
+            error={roleError}
           />
-          <p className={`input-error ${roleError ? "active-error" : ""}`}>
-            {roleError}
-          </p>
         </span>
         <span className="flex-column align-center">
-          <button type="submit" className="create-user-button">
-            Izveidot lietotāju
-          </button>
+          <Button size="md" type="submit">Izveidot lietotāju</Button>
           <p className={`user-success ${createdUser ? 'opacity-1' : ''}`}>
             Lietotājs pievienots veiksmīgi
           </p>

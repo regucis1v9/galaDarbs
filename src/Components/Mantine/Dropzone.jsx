@@ -72,7 +72,7 @@ export default function DropzoneArea({ files, setFiles }) {
             <Dropzone.Idle>Augšupielādē failus</Dropzone.Idle>
           </Text>
           <Text ta="center" fz="sm" mt="xs" c="dimmed" className={classes.textWidth}>
-            Ievelc failus lai augšupielādētu tos. Sistēma atļauj tikai <i>.png, .jpg, .jpeg, .svg</i> failus, kas ir mazāki par 2MB.
+            Ievelc failus lai augšupielādētu tos. Sistēma atļauj <i>.png, .jpg, .jpeg, .svg</i> failus, kas ir līdz 50MB.
           </Text>
         </div>
       </Dropzone>

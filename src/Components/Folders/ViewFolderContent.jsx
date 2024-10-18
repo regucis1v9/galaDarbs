@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder, faSearch, faTrash, faX } from '@fortawesome/free-solid-svg-icons';
+import { Button, Input, Text } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
+import classes from "../../style/SearchInput.module.css"
 
 export default function ViewFolderContent() {
   const { folderName } = useParams();
@@ -13,7 +14,7 @@ export default function ViewFolderContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteImages, setDeleteImages] = useState(false);
   const [imagesToDelete, setImagesToDelete] = useState([]);
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ViewFolderContent() {
     try {
       const response = await fetch('http://localhost/api/retrieveFiles', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json','Accept':'application/json', 'Authorization':`Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ folder_name: folderName }),
       });
 
@@ -70,7 +71,7 @@ export default function ViewFolderContent() {
     try {
       const response = await fetch('http://localhost/api/deleteFiles', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json','Accept':'application/json', 'Authorization':`Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           folder_name: folderName,
           files: imagesToDelete,
@@ -82,7 +83,7 @@ export default function ViewFolderContent() {
       }
 
       // Update the state to remove deleted files
-      setFiles((prevFiles) => 
+      setFiles((prevFiles) =>
         prevFiles.filter(file => !imagesToDelete.includes(extractFileName(file)))
       );
 
@@ -106,7 +107,6 @@ export default function ViewFolderContent() {
       setDeleteImages(true);
     }
   };
-  
 
   const handleBlueButton = () => {
     if (deleteImages) {
@@ -130,30 +130,23 @@ export default function ViewFolderContent() {
   return (
     <div className="content-main">
       <div className="search-bar">
-      <FontAwesomeIcon className="search-icon" icon={faSearch} />
-        <input 
-          type="text" 
-          placeholder="Meklēt failus..." 
-          value={searchTerm} 
-          onChange={(e) => setSearchTerm(e.target.value)} 
-        />
-        <button className='search-buttons' id="red" onClick={handleRedButton}>
-          {deleteImages ? "Apstiprināt dzēšanu" : "Dzēst attēlus"}
-        </button>
-        <button className='search-buttons' onClick={handleBlueButton}>
-          {deleteImages ? "Atcelt dzēšanu" : "Pievienot attēlus mapei"}
-        </button>
+        <Input classNames={{ wrapper: classes.maxWidth }} leftSection={<IconSearch size={18} />} size='md'></Input>
+        <Button onClick={handleRedButton} size='md'>
+          {deleteImages 
+            ? (imagesToDelete.length > 0 ? "Apstiprināt dzēšanu" : "Atcelt dzēšanu") 
+            : "Dzēst failus"}
+        </Button>
       </div>
-    
+
       {filteredFiles.length > 0 ? (
         <div className='image-previews'>
           {filteredFiles.map((file) => (
-            <img 
-              key={extractFileName(file)} 
-              src={`http://localhost${file}`}  
-              alt={`File ${extractFileName(file)}`} 
-              className={`preview-image ${deleteImages && imagesToDelete.includes(extractFileName(file)) ? 'clicked-image' : ''}`} 
-              onClick={() => handleImageClick(file)} 
+            <img
+              key={extractFileName(file)}
+              src={`http://localhost${file}`}
+              alt={`File ${extractFileName(file)}`}
+              className={`preview-image ${deleteImages && imagesToDelete.includes(extractFileName(file)) ? 'clicked-image' : ''}`}
+              onClick={() => handleImageClick(file)}
             />
           ))}
         </div>
@@ -163,7 +156,7 @@ export default function ViewFolderContent() {
 
       {selectedImage && !deleteImages && (
         <div className='modal' onClick={handleCloseModal}>
-          <img src={`http://localhost${selectedImage}`}   alt="Full size" className='modal-image' />
+          <img src={`http://localhost${selectedImage}`} alt="Full size" className='modal-image' />
         </div>
       )}
     </div>

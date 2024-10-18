@@ -4,16 +4,18 @@ import { updateActiveComponent } from '../../actions/componentAction';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTv, faTrash, faX, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-
+import { Button, Input, Modal, Text } from '@mantine/core';
+import { IconSearch, IconDeviceTv, IconMinus } from '@tabler/icons-react';
+import classes from "../../style/SearchInput.module.css";
 
 export default function ViewAllScreens() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [screens, setScreens] = useState([]);
-    const [showPopup, setShowPopup] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [screenToDelete, setScreenToDelete] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         dispatch(updateActiveComponent('manage'));
@@ -24,8 +26,8 @@ export default function ViewAllScreens() {
         try {
             const response = await fetch('http://localhost/api/getAllScreens', {
                 method: 'GET',
-                headers: { 'Authorization':`Bearer ${token}` },
-             });
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -42,7 +44,7 @@ export default function ViewAllScreens() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ id }),
             });
@@ -52,7 +54,7 @@ export default function ViewAllScreens() {
             }
 
             setScreens((prevScreens) => prevScreens.filter(screen => screen.id !== id));
-            setShowPopup(false); // Close the popup after deletion
+            setShowDeleteModal(false); // Close the modal after deletion
         } catch (error) {
             console.error('Error deleting screen:', error);
         }
@@ -64,7 +66,7 @@ export default function ViewAllScreens() {
 
     const handleDeleteButtonClick = (screen) => {
         setScreenToDelete(screen);
-        setShowPopup(true);
+        setShowDeleteModal(true);
     };
 
     const confirmDelete = () => {
@@ -79,7 +81,7 @@ export default function ViewAllScreens() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                 },
             });
 
@@ -94,62 +96,55 @@ export default function ViewAllScreens() {
         }
     };
 
-    const filteredScreens = screens.filter(screen => 
+    const filteredScreens = screens.filter(screen =>
         screen.table_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className="manage-main">
             <div className="search-bar">
-            <FontAwesomeIcon className="search-icon" icon={faSearch} />
-                <input 
-                    type="text" 
-                    placeholder="Meklēt ekrānu..." 
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
+                <Input
+                    placeholder='Ekrāna nosakums...'
+                    classNames={{ wrapper: classes.maxWidth }}
+                    leftSection={<IconSearch size={18} />}
+                    size='md'
+                    onChange={(e) => setSearchTerm(e.target.value)} // Added onChange for search functionality
+                    variant='filled'
                 />
-                <button onClick={addScreen}>Pievienot ekrānu</button>
+                <Button onClick={addScreen} size='md'>Pievienot ekrānu</Button>
             </div>
 
             {filteredScreens.length > 0 ? (
                 <div className="screen-links">
                     {filteredScreens.map((screen) => (
-                        <div key={screen.id} className="screen-button" onClick={() => handleScreenClick(screen.id)}>
+                        <div key={screen.id} className="screen-button">
                             <button className='red' onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 handleDeleteButtonClick(screen);
                             }}>
-                                <FontAwesomeIcon className="delete-icon" icon={faTrash} />
+                                <IconMinus size={20} stroke={3} color='white' />
                             </button>
-                            <FontAwesomeIcon className="button-icon" icon={faTv} />
+                            <IconDeviceTv size={100} />
                             <div className="button-title">{screen.table_name}</div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className='screen-search-error'>Nav pieejami ekrāni.</p>
+                <p className='screen-search-error'>Nevar atrast šādu ekānu.</p>
             )}
 
-            {showPopup && (
-                <div className="modal "onClick={() => setShowPopup(false)}>
-                    <div className="popup">
-                        <FontAwesomeIcon className="close-icon" icon={faX} onClick={() => setShowPopup(false)}/>
-                        <span className='popup-section'>
-                            <h2>Dzēst "{screenToDelete?.table_name}"?</h2>
-                            <div className="seperator"></div>
-                        </span>
-                        
-                        <p>Ekrāns tiks izdzēsts mūžīgi.</p>
-                        <span className='popup-section'>
-                            <div className="seperator"></div>
-                            <div className="popup-buttons">
-                                <button id='red' onClick={confirmDelete}>Jā, izdzēst</button>
-                                <button id='transparent' onClick={() => setShowPopup(false)}>Atcelt</button>
-                            </div>
-                        </span>
-                    </div>
+            <Modal
+                centered
+                opened={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                title={`Dzēst "${screenToDelete?.table_name}"?`}
+            >
+                <Text>Ekrāns tiks izdzēsts mūžīgi.</Text>
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+                    <Button color="red" onClick={confirmDelete}>Jā, izdzēst</Button>
+                    <Button variant="outline" onClick={() => setShowDeleteModal(false)}>Atcelt</Button>
                 </div>
-            )}
+            </Modal>
         </div>
     );
 }

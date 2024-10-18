@@ -100,6 +100,7 @@ export default function UploadFiles() {
             data={folders.map(folder => ({ value: folder, label: folder }))}
             placeholder="Mape nav izvēlēta"
             classNames={dropdown}
+            variant='filled'
           />
         </div>
       ) : (
