@@ -14,6 +14,7 @@ import Login from './Components/Auth/Login';
 import CreateSlideshow from './Views/CreateSlideshow';
 import ViewAllSlideshows from './Views/ViewAllSlideshows';
 import DisplaySlides from './Components/Screens/DisplaySlides';
+import NotFound  from './Components/Mantine/NotFound';
 import { MantineProvider } from '@mantine/core';
 import { Provider } from 'react-redux';
 import store from './store'; 
@@ -22,7 +23,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const themeOverride = {
   colors: {
-    blue: ['#f0f0ff', '#d0d0ff', '#b0b0ff', '#9090ff', '#7070ff', '#5050ff', '#282262', '#18143f', '#0000cc', '#000099'],
+    blue: ['#f0f0ff', '#d0d0ff', '#b0b0ff', '#9090ff', '#7070ff', '#5050ff', '#282262', '#18143f', '#443c8f', '#252142'],
   },
   primaryColor: 'blue', 
   globalStyles: (theme) => ({
@@ -58,6 +59,7 @@ root.render(
                 <Route path="/dashboard/createSlideshow/" element={<CreateSlideshow />} />
                 <Route path="/dashboard/" element={<ViewAllSlideshows />} />
                 <Route path="/screen/:id" element={<DisplaySlides />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
     </Provider>

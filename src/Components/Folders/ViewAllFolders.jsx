@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faX } from '@fortawesome/free-solid-svg-icons';
 import { IconSearch, IconMinus, IconFolderFilled } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';

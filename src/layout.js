@@ -1,18 +1,18 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavLink } from '@mantine/core';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import { IconDeviceTv, IconFolder, IconUpload, IconUser, IconPlayerTrackNext, IconEye, IconPlus, IconHome } from '@tabler/icons-react';
 import React, { useState, useEffect } from 'react';
-import ThemeToggle from "./Components/Mantine/ThemeToggle"
+import ThemeToggle from "./Components/Mantine/ThemeToggle";
 import { useNavigate } from 'react-router-dom';
 
 export default function Layout({ children }) {
   const [opened, { toggle }] = useDisclosure();
   const [activeComponent, setActiveComponent] = useState(() => parseInt(localStorage.getItem('activeComponent')) || 1);
-  const [userData, setUserData] = useState(null); // State to hold user data
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const navigate = useNavigate()
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
   const updateSidebarSection = (id) => {
     setActiveComponent(id);
     localStorage.setItem('activeComponent', id);
@@ -23,7 +23,8 @@ export default function Layout({ children }) {
     const token = localStorage.getItem('token'); 
 
     if (!token) {
-      console.log("No token found");
+      setIsAuthenticated(false);
+      navigate('/'); // Redirect to login if no token
       return;
     }
 
@@ -31,26 +32,28 @@ export default function Layout({ children }) {
       const response = await fetch('http://localhost/api/user', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, // Add Bearer token to headers
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        if (response.status === 500) {
-          // If the status is 500, navigate back to '/'
-          navigate('/');
+        // Handle different response statuses
+        if (response.status === 500 || response.status === 401) {
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+          navigate('/'); // Redirect to login
           return;
         }
         throw new Error('Failed to fetch user data');
       }
 
       const data = await response.json();
-      setUserData(data); // Set fetched user data in state
-      console.log("User data:", data);
-      setIsAuthenticated(true)
+      setIsAuthenticated(true); // Set authentication to true if fetch is successful
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setIsAuthenticated(false);
+      navigate('/'); // Redirect to login on error
     }
   };
 
@@ -62,7 +65,7 @@ export default function Layout({ children }) {
     <AppShell navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}>
       <AppShell.Navbar p="md">
         <NavLink
-          component={Link} // Use component prop to replace NavLink with Link
+          component={Link}
           to="/dashboard/"
           label="Sākums"
           leftSection={<IconHome size="1rem" stroke={1.5} />}
@@ -73,7 +76,7 @@ export default function Layout({ children }) {
           variant="light"
         />
         <NavLink
-          component={Link} // Wrap in Link component
+          component={Link}
           to="/dashboard/upload"
           label="Augšupielādēt failus"
           leftSection={<IconUpload size="1rem" stroke={1.5} />}
@@ -84,7 +87,7 @@ export default function Layout({ children }) {
           variant="light"
         />
         <NavLink
-          component={Link} // Wrap in Link component
+          component={Link}
           to="/dashboard/createSlideshow"
           label="Slaidrādes"
           leftSection={<IconPlayerTrackNext size="1rem" stroke={1.5} />}
@@ -95,7 +98,7 @@ export default function Layout({ children }) {
           variant="light"
         />
         <NavLink
-          component={Link} // Wrap in Link component
+          component={Link}
           to="/dashboard/selectScreen"
           label="Ekrāni"
           leftSection={<IconDeviceTv size="1rem" stroke={1.5} />}
@@ -106,7 +109,7 @@ export default function Layout({ children }) {
           variant="light"
         />
         <NavLink
-          component={Link} // Wrap in Link component
+          component={Link}
           to="/dashboard/view"
           label="Mapes"
           leftSection={<IconFolder size="1rem" stroke={1.5} />}
@@ -126,13 +129,13 @@ export default function Layout({ children }) {
           variant="light"
         >
           <NavLink
-            component={Link} // Wrap in Link component
+            component={Link}
             to="/dashboard/createUser"
             label="Izveidot lietotāju"
             leftSection={<IconPlus size="1rem" stroke={1.5} />}
           />
           <NavLink
-            component={Link} // Wrap in Link component
+            component={Link}
             to="/dashboard/viewAllUsers"
             label="Skatīt lietotājus"
             leftSection={<IconEye size="1rem" stroke={1.5} />}
@@ -141,7 +144,7 @@ export default function Layout({ children }) {
         <ThemeToggle />
       </AppShell.Navbar>
       <AppShell.Main>
-        {isAuthenticated && children}
+        {isAuthenticated ? children : null} {/* Only render children if authenticated */}
       </AppShell.Main>
     </AppShell>
   );
