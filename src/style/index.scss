@@ -557,7 +557,6 @@ p{
   gap:50px;
   font-size:32px;
   font-weight: 500;
-  color:#15253F;
 }
 .create-container{
   height:57vh;
@@ -568,6 +567,7 @@ p{
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  background-color: #0000001c;
 }
 .create-input{
   border: solid rgb(0 0 0 / 23%) 1px;
@@ -652,7 +652,7 @@ p{
   justify-content: space-between;
   align-items: center;
   padding-block:10px;
-  color:black;
+  background-color: #0000001c;
 }
 .single-user:hover{
   box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 4px;
@@ -678,7 +678,6 @@ p{
 }
 .edit-user{
   padding:10px;
-  background-color:var(--mantine-color-blue-6);
   border:none;
   border-radius: 5px;
   color:white;
@@ -823,8 +822,11 @@ p{
     right: unset;
     border-bottom-right-radius: 50px;
     max-width: 30%;
-    padding-bottom:10px;
+    padding-block:10px;
     padding-inline:30px;
+    height: min-content;
+    width: min-content;
+    font-size: 32px;
 }
 
 .top-center {
@@ -837,6 +839,10 @@ p{
     border-bottom-right-radius: 50px;
     padding-block:10px;
     padding-inline:30px;
+    height: min-content;
+    text-align: center;
+    width: min-content;
+    font-size: 32px;
 }
 
 .top-right {
@@ -847,7 +853,10 @@ p{
     border-bottom-left-radius: 50px;
     max-width: 30%;
     padding-inline:30px;
+    height: min-content;
     padding-block: 10px;
+    width: min-content;
+    font-size: 32px;
 }
 
 /* Middle Positioning */
@@ -861,18 +870,26 @@ p{
     border-bottom-right-radius: 50px;
     max-width: 30%;
     padding-inline:30px;
+    height: min-content;
     padding-block: 10px;
+    width: min-content;
+    font-size: 32px;
 }
 
 .middle-center {
+  width: 50%;
     top: 50%;
     left:50%;
     transform: translate(-50%, -50%);
     bottom: unset;
     right: unset;
     border-radius: 50px;
+    height: min-content;
     padding-inline:30px;
     padding-block: 10px;
+    text-align: center;
+    width: min-content;
+    font-size: 32px;
 }
 
 .middle-right {
@@ -885,7 +902,10 @@ p{
     border-bottom-left-radius: 50px;
     max-width: 30%;
     padding-inline:30px;
+    height: min-content;
+    width: min-content;
     padding-block: 10px;
+    font-size: 32px;
 }
 .bottom-left {
     bottom: 0;
@@ -894,8 +914,11 @@ p{
     right: unset;
     border-top-right-radius: 50px;
     max-width: 30%;
-    padding-top:10px;
+    padding-block:10px;
+    height: min-content;
+    width: min-content;
     padding-inline:30px;
+    font-size: 32px;
 }
 
 .bottom-center {
@@ -908,6 +931,10 @@ p{
     border-top-right-radius: 50px;
     padding-top:10px;
     padding-inline:30px;
+    height: min-content;
+    text-align: center;
+    width: min-content;
+    font-size: 32px;
 }
 
 .bottom-right {
@@ -919,6 +946,9 @@ p{
     max-width: 30%;
     padding-top:10px;
     padding-inline:30px;
+    height: min-content;
+    width: min-content;
+    font-size: 32px;
 }
 
 .full{
@@ -980,4 +1010,32 @@ p{
   justify-content: center;
   flex-direction: column;
   gap: 15px;
+  color: black;
+}
+.small-grid-box-dark{
+  color: white;
+  padding: 20px;
+  width:100%;
+  height:100%;
+  background-color: #2f2f2f;
+  border-radius: var(--mantine-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+}
+.darkCalendar{
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2f2f2f;
+  border-radius: var(--mantine-radius-md);
+  p{
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+  }
 }

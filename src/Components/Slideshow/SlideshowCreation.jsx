@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollArea, Stack, Group, Box, Modal, Button, Textarea, SegmentedControl, Text, ColorPicker, Popover, Tooltip } from "@mantine/core";
+import { ScrollArea, Stack, Group, Box, Modal, Button, Textarea, SegmentedControl, Text, ColorPicker, Popover, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { useViewportSize, useElementSize, useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setButtonsData, updateImageDescription, updateTextColor, updateBgColor, updateTextPosition  } from "../../actions/imageActions";
@@ -8,9 +8,10 @@ import SlideshowModal from "./SlideshowModal";
 import classes from "../../style/SlidesCreation.module.css";
 import position from "../../style/DescriptionPosition.module.css"
 import description from "../../style/SlideDescription.module.css";
-import { IconX, IconCirclePlusFilled, IconArrowRight, IconPlus, IconMinus } from "@tabler/icons-react";
+import { IconX, IconCirclePlusFilled, IconArrowRight, IconPlus } from "@tabler/icons-react";
 
 export default function SlideshowCreation() {
+    const { colorScheme, setColorScheme } = useMantineColorScheme();
     const { height: viewportHeight, width: viewportWidth } = useViewportSize();
     const { ref, width: containerWidth } = useElementSize();
     const { previewRef } = useElementSize();
@@ -144,7 +145,11 @@ export default function SlideshowCreation() {
     return (
         <div className="slideshow-create-main">
             <span className="flex-column">
-                <Button onClick={addButton} style={{ marginBottom: 10 }} w={containerWidth} rightSection={<IconPlus stroke={2} size={20} />}>
+                <Button 
+                onClick={addButton}
+                style={{ marginBottom: 10 }} 
+                w={containerWidth} 
+                rightSection={<IconPlus stroke={2} size={20} />}>
                     Pievienot Slaidu
                 </Button>
                 <ScrollArea offsetScrollbars  type="scroll" w={200} h={viewportHeight}>
@@ -160,17 +165,16 @@ export default function SlideshowCreation() {
                                             width: containerWidth,
                                         }}
                                     >
-                                        <Button
-                                            w={containerWidth}
-                                            h={112.5}
-                                            onClick={() => handleButtonClick(button.id)}
-                                            variant="outline"
-                                            color="gray"
-                                            classNames={{ root: classes.root }}
-                                            style={{
-                                                border: button.id === selectedButtonId ? "3px solid #282262" : "none",
-                                            }}
-                                        >
+                                            <Button
+                                                w={containerWidth}
+                                                h={112.5}
+                                                onClick={() => handleButtonClick(button.id)}
+                                                variant="outline"
+                                                classNames={{ root: colorScheme === 'light' ? classes.root : classes.darkRoot }}
+                                                style={{
+                                                    border: button.id === selectedButtonId ? "3px solid #282262" : "none",
+                                                }}
+                                            >
                                             <img className="slide-preview-image" src={button.imageLink || ""} alt="" />
                                         </Button>
                                         <Button
@@ -189,6 +193,7 @@ export default function SlideshowCreation() {
                                                 fontWeight: "bold",
                                                 zIndex: 4,
                                             }}
+                                            
                                         >
                                             <IconX style={{ width: 20, height: 20 }} color="gray" stroke={2} />
                                         </Button>
@@ -222,7 +227,7 @@ export default function SlideshowCreation() {
                             {selectedImageDescription}
                         </div>
                     )}
-                    <Button onClick={openSelect} classNames={{ root: classes.root, label: classes.label }}>
+                    <Button onClick={openSelect} classNames={{ root: colorScheme === 'light' ? classes.root : classes.darkRoot }} >
                         <span className="z4 big">{selectedImage ? "" : <span className="image-selector-text"><IconCirclePlusFilled style={{ width: 100, height: 100 }} color="gray" stroke={1} /> Izvēlēties failu</span>}</span>
                         {selectedImage && 
                             <img className="slide-preview-image" src={selectedImage} alt="Kļūda atlasot bildi" />

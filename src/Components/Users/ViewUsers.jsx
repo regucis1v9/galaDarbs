@@ -1,11 +1,10 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
-import { Skeleton, Modal, Button, TextInput, PasswordInput, Text, Select, Input } from '@mantine/core';
+import { Skeleton, Modal, Button, TextInput, PasswordInput, Text, Select, Input, Paper } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { IconSearch, IconEdit, IconTrashFilled } from '@tabler/icons-react';
 import classes from "../../style/SearchInput.module.css";
+import { Link } from "react-router-dom";
 
 export default function ViewUsers() {
     const [allUsers, setAllUsers] = useState([]);
@@ -160,8 +159,16 @@ export default function ViewUsers() {
     return (
         <div className="view-user-content">
             <div className="search-bar">
-                <Input classNames={{wrapper: classes.maxWidth}} leftSection={<IconSearch size={18}/>} size='md'></Input>
-                <Button  size='md' >Pievienot lietotāju</Button>
+                <Input 
+                placeholder="Lietotāja lietotājvārds..."
+                variant="filled"
+                classNames={{wrapper: classes.maxWidth}} 
+                leftSection={<IconSearch size={18}/>} 
+                size='md' 
+                onChange={(e) => setSearchTerm(e.currentTarget.value)}
+                >                  
+                </Input>
+                <Link to="/dashboard/createUser"><Button  size='md' >Pievienot lietotāju</Button></Link>
             </div>
 
             {loading ? (
@@ -180,18 +187,18 @@ export default function ViewUsers() {
                                 <span className="role-title">{user.role}</span>
                             </span>
                             <div className="quick-user-actions">
-                                <button className="edit-user" onClick={() => handleEditButtonClick(user)}>
+                                <Button onClick={() => handleEditButtonClick(user)} w={45} h={45} p={10}>
                                     <IconEdit></IconEdit>
-                                </button>
-                                <button className="delete-user" onClick={() => handleDeleteButtonClick(user)}>
+                                </Button>
+                                <Button  color="red" onClick={() => handleDeleteButtonClick(user)} w={45} h={45} p={10}>
                                     <IconTrashFilled></IconTrashFilled>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <Text>No results found.</Text>
+                <Text className="screen-search-error">Nevar atrast šādu ekrānu.</Text>
             )}
 
             <Modal 

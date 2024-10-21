@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTv, faTrash, faX, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, Modal, Text } from '@mantine/core';
 import { IconSearch, IconDeviceTv, IconMinus } from '@tabler/icons-react';
@@ -125,12 +123,12 @@ export default function ViewAllScreens() {
                                 <IconMinus size={20} stroke={3} color='white' />
                             </button>
                             <IconDeviceTv size={100} />
-                            <div className="button-title">{screen.table_name}</div>
+                            <Text ta="center">{screen.table_name}</Text>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className='screen-search-error'>Nevar atrast šādu ekānu.</p>
+                <Text className='screen-search-error'>Nevar atrast šādu ekānu.</Text>
             )}
 
             <Modal

@@ -5,11 +5,13 @@ import { faTrash, faX } from '@fortawesome/free-solid-svg-icons';
 import { IconSearch, IconMinus, IconFolderFilled } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { updateActiveComponent } from '../../actions/componentAction';
-import { Button, Input, useMantineTheme, Modal, Group, Text } from '@mantine/core';
-import classes from "../../style/SearchInput.module.css"
+import { Button, Input, useMantineTheme, Modal, Group, Text, useMantineColorScheme } from '@mantine/core';
+import classes from "../../style/SearchInput.module.css";
 
 export default function ViewFiles() {
   const theme = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const isDarkMode = colorScheme === 'dark'; // Check if dark mode is active
   const [folders, setFolders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddFolderModal, setShowAddFolderModal] = useState(false);
@@ -112,8 +114,6 @@ export default function ViewFiles() {
         onChange={(e) => setSearchTerm(e.currentTarget.value)}  />
         <Button onClick={() => setShowAddFolderModal(true)} size='md'>Pievienot mapi</Button>
       </div>
-
-      {/* Add Folder Modal */}
       <Modal
         opened={showAddFolderModal}
         onClose={() => setShowAddFolderModal(false)}
@@ -156,9 +156,9 @@ export default function ViewFiles() {
             <div key={index} className="screen-button">
               <Link to={`/dashboard/folderContent/${folder}`} title={folder}>
                 <div className="folder-icon">
-                  <IconFolderFilled size={60} color={theme.colors.blue[6]} />
+                  <IconFolderFilled size={60} color={isDarkMode ? theme.colors.blue[8] : theme.colors.blue[6]} />
                 </div>
-                <div className="folder-title">{folder}</div>
+                <Text ta="center" color={isDarkMode ? "white" : "black"}>{folder}</Text>
               </Link>
               <button className="red" onClick={(e) => {
                 e.stopPropagation();
@@ -169,7 +169,7 @@ export default function ViewFiles() {
             </div>
           ))
         ) : (
-          <p className="search-error">Nevar atrast šādu mapi.</p>
+          <Text className="search-error">Nevar atrast šādu mapi.</Text>
         )}
       </div>
     </div>

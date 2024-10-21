@@ -59,7 +59,7 @@ export default function Login() {
         console.log(data);
         localStorage.setItem('token', data.token);
         if (response.ok) {
-          navigate("/dashboard/upload");
+          navigate("/dashboard");
         } else {
           if (data.errors) {
             setUsernameError(data.errors.name || "");

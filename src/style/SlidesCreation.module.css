@@ -7,3 +7,9 @@
 .root:hover{
     background-color: #e5e5e5;
 }
+.darkRoot{
+    background-color: #3b3b3b;
+}
+.darkRoot:hover{
+    background-color: #2A2A2A;
+}

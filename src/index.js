@@ -13,12 +13,11 @@ import UserManagment from './Views/UserManagment';
 import Login from './Components/Auth/Login';
 import CreateSlideshow from './Views/CreateSlideshow';
 import ViewAllSlideshows from './Views/ViewAllSlideshows';
+import DisplaySlides from './Components/Screens/DisplaySlides';
 import { MantineProvider } from '@mantine/core';
 import { Provider } from 'react-redux';
 import store from './store'; 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Test from "./Views/Test";
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const themeOverride = {
@@ -58,7 +57,7 @@ root.render(
                 <Route path="/dashboard/viewAllUsers" element={<UserManagment />} />
                 <Route path="/dashboard/createSlideshow/" element={<CreateSlideshow />} />
                 <Route path="/dashboard/" element={<ViewAllSlideshows />} />
-                <Route path="/test/" element={<Test />} />
+                <Route path="/screen/:id" element={<DisplaySlides />} />
             </Routes>
         </Router>
     </Provider>
